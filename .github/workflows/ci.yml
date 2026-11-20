@@ -1,0 +1,57 @@
+name: CI — Multi-Donor scRNA-seq Harmony & Pseudobulk PyDESeq2
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: pytest -v tests/
+
+      - name: Run Snakemake pipeline on real Kang 2018 8-donor PBMC data
+        run: |
+          snakemake --cores 2 --configfile config/ci.yaml
+
+      - name: Verify expected outputs
+        run: |
+          test -s results/batch_metrics.tsv
+          test -s results/pseudobulk_pca.tsv
+          test -s results/pseudobulk_deseq2_all.tsv
+          test -s results/celltype_deg_summary.tsv
+          test -s results/pseudobulk_vs_wilcoxon.tsv
+          test -s results/pathway_enrichment.tsv
+          test -s figures/harmony_integration_umap.png
+          test -s figures/pseudobulk_pca_and_degs.png
+          test -s figures/volcano_and_pb_vs_sc.png
+          test -s figures/pathway_enrichment_heatmap.png
+
+      - name: Upload CI figures and summary tables
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-pbmc-outputs
+          path: |
+            results/batch_metrics.tsv
+            results/celltype_deg_summary.tsv
+            results/pseudobulk_vs_wilcoxon.tsv
+            results/pathway_enrichment.tsv
+            figures/*.png
