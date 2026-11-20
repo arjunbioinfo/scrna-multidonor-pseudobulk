@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this workflow or code in your research, please cite it as below."
+type: software
+title: "scrna-multidonor-pseudobulk: Reproducible multi-donor scRNA-seq Harmony integration and pseudobulk PyDESeq2 workflow"
+version: 0.1.0
+date-released: 2026-11-20
+license: MIT
+url: "https://arjunbioinfo.github.io/"
+repository-code: "https://github.com/arjunbioinfo/scrna-multidonor-pseudobulk"
+authors:
+  - family-names: "Thippana"
+    given-names: "Mallikarjuna"
+    affiliation: "Department of Oncology-Pathology, Karolinska Institutet"
+    orcid: "https://orcid.org/0000-0001-8485-8626"
+keywords:
+  - bioinformatics
+  - scRNA-seq
+  - Harmony
+  - pseudobulk
+  - PyDESeq2
+  - Scanpy
+  - Snakemake
+  - reproducible research
+abstract: >-
+  A config-driven Snakemake and Python workflow for multi-donor single-cell RNA-seq
+  batch integration (Harmony), donor-level pseudobulk differential expression (PyDESeq2),
+  single-cell vs. pseudobulk false-positive benchmarking, and cell-type pathway enrichment.
