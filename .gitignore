@@ -11,4 +11,5 @@ results/*
 !results/.gitkeep
 figures/*
 !figures/.gitkeep
+!figures/*.png
 .DS_Store

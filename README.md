@@ -3,13 +3,24 @@
 [![CI](https://github.com/arjunbioinfo/scrna-multidonor-pseudobulk/actions/workflows/ci.yml/badge.svg)](https://github.com/arjunbioinfo/scrna-multidonor-pseudobulk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A reproducible, config-driven **Snakemake + Python** workflow for multi-donor single-cell RNA-seq **Harmony** batch integration, donor-level **pseudobulk PyDESeq2** differential expression, naive single-cell vs. pseudobulk false-positive benchmarking, and cell-type immune pathway enrichment.
+A reproducible, config-driven **Snakemake + Python** workflow for multi-donor single-cell RNA-seq **Harmony** batch integration, donor-level **pseudobulk PyDESeq2** differential expression, a comparison of pseudobulk and naive single-cell DEG calls, and cell-type immune pathway enrichment.
 
 Every push runs offline unit tests and executes the full Snakemake pipeline on real public 8-donor human PBMC data (**Kang et al., 2018**, IFN-beta stimulated vs. control, `GSE96583`) in GitHub Actions CI.
 
 ## Why Pseudobulk DE?
 
 Treating individual cells from the same patient as independent replicates inflates false positives in case-control scRNA-seq studies ([Single-Cell Best Practices](https://www.sc-best-practices.org/conditions/differential_gene_expression.html)). This workflow aggregates raw counts per `(donor, condition, cell_type)`, models biological replicate variability with negative-binomial **PyDESeq2**, and directly compares the resulting DEGs against a naive single-cell Wilcoxon test.
+
+## Example outputs (CI profile)
+
+Kang et al. (2018) PBMCs from 8 donors, IFN-β stimulated vs control, capped at 350 cells per donor and condition (5,600 cells).
+
+![Pre- and post-Harmony UMAPs coloured by donor and cell type](figures/harmony_integration_umap.png)
+![Pseudobulk volcano plot for CD14+ monocytes and DEG counts by method](figures/volcano_and_pb_vs_sc.png)
+
+* **Pseudobulk DE:** with 8 donors per condition, PyDESeq2 finds the expected interferon response in every major cell type, strongest in CD14+ monocytes (1,269 DEGs; top genes include *CXCL10*, *IFIT3*, *MX1* and *ISG15*).
+* **Integration:** Harmony slightly improves donor mixing (kNN donor entropy 0.85 → 0.89) while keeping cell types separated.
+* **Pseudobulk vs single-cell:** for CD14+ monocytes, pseudobulk on 16 donor-level samples calls 1,269 genes and the cell-level Wilcoxon test on 1,404 cells calls 684; 522 genes are shared. With an interferon response this strong, both approaches detect it. This run therefore shows how far the two methods agree; measuring false positives would need a null comparison, for example with condition labels permuted within donors.
 
 ## Pipeline Overview
 
