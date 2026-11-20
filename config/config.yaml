@@ -1,0 +1,45 @@
+# Full-cohort configuration: Kang et al. (2018) 8-donor PBMC IFN-beta vs. control (GSE96583)
+
+dataset:
+  name: "kang_2018_pbmc"
+  url: "https://figshare.com/ndownloader/files/34464122"
+
+comparison:
+  control: "ctrl"
+  treated: "stim"
+
+qc:
+  min_genes: 200
+  min_cells: 3
+  max_cells_per_donor_condition: 0   # 0 = keep all cells
+
+integration:
+  n_top_genes: 2000
+  n_pcs: 30
+
+pseudobulk:
+  min_cells_per_sample: 10
+  min_counts_per_sample: 1000
+  min_donors_per_condition: 3
+  min_total_gene_counts: 20
+  padj_threshold: 0.05
+  lfc_threshold: 1.0
+  cell_types: []                     # Empty = test all qualifying cell types
+
+plotting:
+  highlight_genes:
+    - "ISG15"
+    - "IFIT1"
+    - "IFIT3"
+    - "MX1"
+    - "IFI6"
+    - "CXCL10"
+    - "OAS1"
+    - "RSAD2"
+
+random_seed: 42
+
+output_dirs:
+  data: "data/raw"
+  results: "results"
+  figures: "figures"
