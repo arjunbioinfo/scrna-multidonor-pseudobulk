@@ -7,6 +7,7 @@ date-released: 2026-11-20
 license: MIT
 url: "https://arjunbioinfo.github.io/"
 repository-code: "https://github.com/arjunbioinfo/scrna-multidonor-pseudobulk"
+doi: "10.5281/zenodo.24392039"
 authors:
   - family-names: "Thippana"
     given-names: "Mallikarjuna"
