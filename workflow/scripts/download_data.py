@@ -78,6 +78,18 @@ def download_file(url: str, dest: Path, timeout: int = 180) -> int:
             for chunk in r.iter_content(chunk_size=1024 * 512):
                 if chunk:
                     fh.write(chunk)
+    with open(tmp, "rb") as fh:
+        head = fh.read(520)
+    # HDF5 files (and therefore .h5ad) start with this signature at offset 0 or 512.
+    signature = b"\x89HDF\r\n\x1a\n"
+    if not (head[:8] == signature or head[512:520] == signature):
+        n = tmp.stat().st_size
+        tmp.unlink()
+        raise RuntimeError(
+            f"Download from {url} is not an HDF5/.h5ad file ({n} bytes). "
+            "The host may be blocking the request; download the file manually into "
+            f"{dest} and re-run."
+        )
     tmp.rename(dest)
     size = dest.stat().st_size
     logger.info("Saved %s (%d bytes)", dest, size)
